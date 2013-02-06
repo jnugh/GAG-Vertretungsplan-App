@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Vertretungsplan GAG</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="connection_error">Es konnte keine Verbindung zum Server hergestellt werden.</string>
+    <string name="alert_dialog_ok">Neu starten</string>
+    <string name="alert_dialog_cancel">Beenden</string>
+    <string name="hour">Std</string>
+    <string name="teacher">Vertr.</string>
+    <string name="classes">Klasse</string>
+    <string name="room">Raum</string>
+    <string name="comment">Kommentar</string>
+
+</resources>
