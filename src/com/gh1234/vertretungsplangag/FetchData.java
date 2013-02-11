@@ -1,7 +1,5 @@
 package com.gh1234.vertretungsplangag;
 
-import java.util.ArrayList;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,12 +8,14 @@ import org.json.JSONTokener;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class FetchData extends AsyncTask<Integer, Integer, String> {
 
 	private OnTaskCompleted listener;
+	private Activity context;
 	private boolean error = false;
 	private Plan plan = null;
 
@@ -23,8 +23,9 @@ public class FetchData extends AsyncTask<Integer, Integer, String> {
 		return plan;
 	}
 
-	public FetchData(OnTaskCompleted listener) {
+	public FetchData(OnTaskCompleted listener, Activity context) {
 		this.listener = listener;
+		this.context = context;
 	}
 
 	@Override
@@ -36,8 +37,10 @@ public class FetchData extends AsyncTask<Integer, Integer, String> {
 					public void onSuccess(String response) {
 						try {
 							plan = new Plan(params[0]);
-							JSONArray arr = new JSONArray(new JSONTokener(
+							JSONObject baseObj = new JSONObject(new JSONTokener(
 									response));
+							plan.setDate(baseObj.getString("planDate"));
+							JSONArray arr = baseObj.getJSONArray("data");
 							for (int i = 0; i < arr.length(); i++) {
 								JSONObject obj = arr.getJSONObject(i);
 								plan.add(new Entry(obj.getString("hour"), obj
@@ -47,11 +50,25 @@ public class FetchData extends AsyncTask<Integer, Integer, String> {
 										.getString("room"), obj
 										.getString("comment")));
 							}
-							FetchData.this.listener.onTaskCompleted();
+							FetchData.this.context
+									.runOnUiThread(new Runnable() {
+										@Override
+										public void run() {
+											FetchData.this.listener
+													.onTaskCompleted();
+										}
+									});
 						} catch (JSONException throwable) {
 							FetchData.this.error = true;
 							Log.e("FetchData", "Error in JSON read", throwable);
-							FetchData.this.listener.onTaskCompleted();
+							FetchData.this.context
+									.runOnUiThread(new Runnable() {
+										@Override
+										public void run() {
+											FetchData.this.listener
+													.onTaskCompleted();
+										}
+									});
 						}
 					}
 
@@ -59,7 +76,12 @@ public class FetchData extends AsyncTask<Integer, Integer, String> {
 					public void onFailure(Throwable throwable) {
 						FetchData.this.error = true;
 						Log.e("FetchData", "Error in HTTP request", throwable);
-						FetchData.this.listener.onTaskCompleted();
+						FetchData.this.context.runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								FetchData.this.listener.onTaskCompleted();
+							}
+						});
 					}
 				});
 

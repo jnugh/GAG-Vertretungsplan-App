@@ -24,7 +24,9 @@ public class Entry {
 	}
 
 	private void setHour(String hour) {
-		this.hour = hour;
+		this.hour = hour.replace(' ', '\0');
+		if(this.hour.equals(""))
+			this.hour = "?";
 	}
 
 	public String getTeacher() {
@@ -33,6 +35,8 @@ public class Entry {
 
 	private void setTeacher(String teacher) {
 		this.teacher = teacher;
+		if(this.teacher.equals(""))
+			this.teacher = "?";
 	}
 
 	public String getClasses() {
@@ -41,6 +45,8 @@ public class Entry {
 
 	private void setClasses(String classes) {
 		this.classes = classes;
+		if(this.classes.equals(""))
+			this.classes = "?";
 	}
 
 	public String getSubject() {
@@ -49,6 +55,8 @@ public class Entry {
 
 	private void setSubject(String subject) {
 		this.subject = subject;
+		if(this.subject.equals(""))
+			this.subject = "?";
 	}
 
 	public String getRoom() {
@@ -57,6 +65,8 @@ public class Entry {
 
 	private void setRoom(String room) {
 		this.room = room;
+		if(this.room.equals(""))
+			this.room = "?";
 	}
 
 	public String getComment() {
@@ -65,6 +75,8 @@ public class Entry {
 
 	private void setComment(String comment) {
 		this.comment = comment;
+		if(this.comment.equals(""))
+			this.comment = "Kein Kommentar";
 	}
 
 }

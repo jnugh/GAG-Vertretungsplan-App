@@ -12,5 +12,6 @@
     <string name="classes">Klasse</string>
     <string name="room">Raum</string>
     <string name="comment">Kommentar</string>
+    <string name="subject">Fach</string>
 
 </resources>
