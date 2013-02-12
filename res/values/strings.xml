@@ -14,5 +14,11 @@
     <string name="comment">Kommentar</string>
     <string name="subject">Fach</string>
     <string name="switch_plan">Plan wechseln</string>
+    <string name="settings_data">Schuldaten</string>
+    <string name="settings_class">Klasse</string>
+    <string name="settings_subjects">Kurse</string>
+    <string name="settings_add_subject">Kurs hinzufügen</string>
+    <string name="settings_notifications">Für alle Einträge auf dem Vertretungsplan die zu deiner Klasse gehören eine Information senden</string>
+    <string name="settings_safe">Speichern</string>
 
 </resources>

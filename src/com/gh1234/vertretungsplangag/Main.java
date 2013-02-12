@@ -18,6 +18,10 @@ public class Main extends FragmentActivity implements OnTaskCompleted,
 		FragmentAlertDialog {
 
 	public static final String SERVER = "http://192.168.0.2:3000/";
+	public static final String PREFERENCE_FILE = "settings";
+	public static final String PREFERENCE_CLASSES = "classes";
+	public static final String PREFERENCE_NOTIFICATIONS = "notifications";
+	public static final String PREFERENCE_SUBJECTS = "subjects";
 	ProgressBar progress = null;
 	FetchData fetch = null;
 	PlanListAdapter adapter;
@@ -32,8 +36,8 @@ public class Main extends FragmentActivity implements OnTaskCompleted,
 
 		progress = (ProgressBar) findViewById(R.id.progress);
 
-		Button button = (Button) findViewById(R.id.switch_plan);
-		button.setOnClickListener(new OnClickListener() {
+		Button switchButton = (Button) findViewById(R.id.switch_plan);
+		switchButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -42,6 +46,16 @@ public class Main extends FragmentActivity implements OnTaskCompleted,
 					intent.putExtra("startPlan", 2);
 				else
 					intent.putExtra("startPlan", 1);
+				startActivity(intent);
+			}
+		});
+
+		Button settingsButton = (Button) findViewById(R.id.settings);
+		settingsButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(Main.this, Settings.class);
 				startActivity(intent);
 			}
 		});
@@ -64,10 +78,7 @@ public class Main extends FragmentActivity implements OnTaskCompleted,
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_settings:
-			return true;
-		case R.id.switch_plan:
-			Intent intent = new Intent(this, Main.class);
-			intent.putExtra("startPlan", 2);
+			Intent intent = new Intent(Main.this, Settings.class);
 			startActivity(intent);
 			return true;
 		default:
@@ -114,8 +125,8 @@ public class Main extends FragmentActivity implements OnTaskCompleted,
 	@Override
 	public void doPositiveClick() {
 		Intent intent = new Intent(this, Main.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
-		finish();
 	}
 
 	@Override
