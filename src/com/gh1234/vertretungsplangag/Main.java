@@ -47,7 +47,7 @@ public class Main extends FragmentActivity implements OnTaskCompleted,
 		} else {
 			SharedPreferences preferences = getSharedPreferences(
 					Main.PREFERENCE_FILE, 0);
-			if(!preferences.contains(Main.PREFERENCE_USERID)){
+			if (!preferences.contains(Main.PREFERENCE_USERID)) {
 				Log.w("GCM", "Something went wrong...");
 				GCMRegistrar.unregister(this);
 			}

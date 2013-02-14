@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
+import android.util.Base64;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
@@ -43,9 +44,13 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 		// Notification Setup
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-				context).setSmallIcon(R.drawable.ic_launcher)
+				context)
+				.setSmallIcon(R.drawable.ic_launcher)
 				.setContentTitle("Vertretungsplanänderung")
-				.setContentText(intent.getStringExtra("message"));
+				.setContentText(
+						new String(Base64.decode(
+								intent.getStringExtra("message"),
+								Base64.DEFAULT)));
 		Intent resultIntent = new Intent(context, Main.class);
 		if (android.os.Build.VERSION.SDK_INT >= 16) {
 			TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
@@ -133,11 +138,21 @@ public class GCMIntentService extends GCMBaseIntentService {
 					context,
 					Main.SERVER + "users/"
 							+ preferences.getString(Main.PREFERENCE_USERID, "")
-							+ "/remove", new AsyncHttpResponseHandler());
+							+ "/remove", new AsyncHttpResponseHandler() {
+						@Override
+						public void onFailure(Throwable arg0, String arg1) {
+							super.onFailure(arg0, arg1);
+							wl.release();
+						}
+
+						@Override
+						public void onSuccess(int arg0, String arg1) {
+							super.onSuccess(arg0, arg1);
+							wl.release();
+						}
+					});
 			preferences.edit().remove(Main.PREFERENCE_USERID).commit();
 		}
-
-		wl.release();
 	}
 
 }
