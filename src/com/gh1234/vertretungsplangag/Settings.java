@@ -4,10 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
@@ -19,12 +18,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 public class Settings extends FragmentActivity {
 	private EditText classes;
 	private LinearLayout subjectLinearLayout;
-	private ImageButton addSubject;
+	private ImageButton addSubjectButton;
 	private CheckBox notificationCheckBox;
 	private Button saveButton;
 
@@ -41,13 +39,14 @@ public class Settings extends FragmentActivity {
 
 		classes = (EditText) findViewById(R.id.settings_classes);
 		subjectLinearLayout = (LinearLayout) findViewById(R.id.settings_subject_list);
-		addSubject = (ImageButton) findViewById(R.id.settings_add_subject);
+		addSubjectButton = (ImageButton) findViewById(R.id.settings_add_subject);
 		notificationCheckBox = (CheckBox) findViewById(R.id.settings_notifications);
 		saveButton = (Button) findViewById(R.id.settings_save);
 
 		insertData();
 
 		saveButton.setOnClickListener(new SaveListener());
+		addSubjectButton.setOnClickListener(new AddSubjectListener());
 	}
 
 	@SuppressLint("NewApi")
@@ -89,13 +88,54 @@ public class Settings extends FragmentActivity {
 		}
 	}
 
+	private Set<String> readSubjects() {
+		HashSet<String> resultSet = new HashSet<String>();
+		for (int i = 0; i < subjectLinearLayout.getChildCount(); i++) {
+			EditText subjectText = (EditText) subjectLinearLayout.getChildAt(i);
+			if (!subjectText.getText().toString().equals("")
+					&& !resultSet.contains(subjectText.getText().toString()))
+				resultSet.add(subjectText.getText().toString());
+		}
+		return resultSet;
+	}
+
 	private class SaveListener implements OnClickListener {
+		@SuppressLint("NewApi")
 		@Override
 		public void onClick(View v) {
-
+			Set<String> subjectSet = readSubjects();
+			SharedPreferences prefs = getSharedPreferences(
+					Main.PREFERENCE_FILE, 0);
+			Editor editor = prefs.edit();
+			editor.putString(Main.PREFERENCE_CLASSES, classes.getText()
+					.toString());
+			editor.putBoolean(Main.PREFERENCE_NOTIFICATIONS,
+					notificationCheckBox.isChecked());
+			if (android.os.Build.VERSION.SDK_INT >= 11) {
+				editor.putStringSet(Main.PREFERENCE_SUBJECTS, subjectSet);
+			} else {
+				String subjectSetString = "";
+				for (String string : subjectSet) {
+					if(!subjectSetString.equals(""))
+						subjectSetString += ";";
+					subjectSetString += string;
+				}
+				editor.putString(Main.PREFERENCE_SUBJECTS, subjectSetString);
+			}
+			editor.commit();
+			finish();
 		}
 	}
-	
+
+	private class AddSubjectListener implements OnClickListener {
+		@Override
+		public void onClick(View v) {
+			EditText input = new EditText(Settings.this);
+			input.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+			subjectLinearLayout.addView(input);
+		}
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
