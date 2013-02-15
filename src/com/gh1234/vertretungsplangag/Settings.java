@@ -124,7 +124,9 @@ public class Settings extends BaseFragmentActivity {
 			editor.putBoolean(Main.PREFERENCE_NOT_FIRST_START, true);
 			editor.putBoolean(Main.PREFERENCE_DATA_NOT_PUSHED, true);
 			editor.commit();
-			finish();
+			Intent intent = new Intent(Settings.this, Main.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 		}
 	}
 
