@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
-public class Settings extends FragmentActivity {
+public class Settings extends BaseFragmentActivity {
 	private EditText classes;
 	private LinearLayout subjectLinearLayout;
 	private ImageButton addSubjectButton;
@@ -116,7 +115,7 @@ public class Settings extends FragmentActivity {
 			} else {
 				String subjectSetString = "";
 				for (String string : subjectSet) {
-					if(!subjectSetString.equals(""))
+					if (!subjectSetString.equals(""))
 						subjectSetString += ";";
 					subjectSetString += string;
 				}

@@ -1,15 +1,10 @@
 package com.gh1234.vertretungsplangag;
 
-import com.google.android.gcm.GCMRegistrar;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +13,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-public class Main extends FragmentActivity implements OnTaskCompleted,
+public class Main extends BaseFragmentActivity implements OnTaskCompleted,
 		FragmentAlertDialog {
 
 	public static final String SERVER = "http://cascaded-web.com:3000/";
@@ -27,6 +22,7 @@ public class Main extends FragmentActivity implements OnTaskCompleted,
 	public static final String PREFERENCE_NOTIFICATIONS = "notifications";
 	public static final String PREFERENCE_SUBJECTS = "subjects";
 	protected static final String PREFERENCE_USERID = "userid";
+	public static final String PREFERENCE_NOT_FIRST_START = "notfirststart";
 	ProgressBar progress = null;
 	FetchData fetch = null;
 	PlanListAdapter adapter;
@@ -37,23 +33,6 @@ public class Main extends FragmentActivity implements OnTaskCompleted,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// GCM
-		GCMRegistrar.checkDevice(this);
-		GCMRegistrar.checkManifest(this);
-		final String regId = GCMRegistrar.getRegistrationId(this);
-		if (regId.equals("")) {
-			GCMRegistrar.register(this, getString(R.string.SENDER_ID));
-		} else {
-			SharedPreferences preferences = getSharedPreferences(
-					Main.PREFERENCE_FILE, 0);
-			if (!preferences.contains(Main.PREFERENCE_USERID)) {
-				Log.w("GCM", "Something went wrong...");
-				GCMRegistrar.unregister(this);
-			}
-			Log.v("GCM", "Already registered");
-		}
-		// GCM END
 
 		setContentView(R.layout.activity_main);
 
