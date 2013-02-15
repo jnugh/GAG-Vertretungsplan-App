@@ -21,7 +21,7 @@ import android.widget.ProgressBar;
 public class Main extends FragmentActivity implements OnTaskCompleted,
 		FragmentAlertDialog {
 
-	public static final String SERVER = "http://192.168.0.2:3000/";
+	public static final String SERVER = "http://cascaded-web.com:3000/";
 	public static final String PREFERENCE_FILE = "settings";
 	public static final String PREFERENCE_CLASSES = "classes";
 	public static final String PREFERENCE_NOTIFICATIONS = "notifications";
@@ -155,5 +155,11 @@ public class Main extends FragmentActivity implements OnTaskCompleted,
 	@Override
 	public void doNegativeClick() {
 		finish();
+	}
+	
+	@Override
+	protected void onStop() {
+		fetch.cancel(true);
+		super.onStop();
 	}
 }

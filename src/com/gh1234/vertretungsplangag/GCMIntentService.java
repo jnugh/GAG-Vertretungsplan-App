@@ -61,6 +61,9 @@ public class GCMIntentService extends GCMBaseIntentService {
 			PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(
 					0, PendingIntent.FLAG_UPDATE_CURRENT);
 			mBuilder.setContentIntent(resultPendingIntent);
+		} else {
+			PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, 0);
+			mBuilder.setContentIntent(resultPendingIntent);
 		}
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		// mId allows you to update the notification later on.
@@ -154,5 +157,9 @@ public class GCMIntentService extends GCMBaseIntentService {
 			preferences.edit().remove(Main.PREFERENCE_USERID).commit();
 		}
 	}
-
+	
+	@Override
+	protected String[] getSenderIds(Context context) {
+		return new String[]{context.getString(R.string.SENDER_ID)};
+	}
 }
