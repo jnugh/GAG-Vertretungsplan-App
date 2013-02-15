@@ -16,13 +16,14 @@ import android.widget.ProgressBar;
 public class Main extends BaseFragmentActivity implements OnTaskCompleted,
 		FragmentAlertDialog {
 
-	public static final String SERVER = "http://cascaded-web.com:3000/";
+	public static final String SERVER = "http://192.168.0.2:3000/";
 	public static final String PREFERENCE_FILE = "settings";
 	public static final String PREFERENCE_CLASSES = "classes";
 	public static final String PREFERENCE_NOTIFICATIONS = "notifications";
 	public static final String PREFERENCE_SUBJECTS = "subjects";
 	protected static final String PREFERENCE_USERID = "userid";
 	public static final String PREFERENCE_NOT_FIRST_START = "notfirststart";
+	public static final String PREFERENCE_DATA_NOT_PUSHED = "datanotpushed";
 	ProgressBar progress = null;
 	FetchData fetch = null;
 	PlanListAdapter adapter;

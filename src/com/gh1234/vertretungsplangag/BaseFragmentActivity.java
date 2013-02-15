@@ -25,6 +25,10 @@ public class BaseFragmentActivity extends FragmentActivity {
 			finish();
 			return;
 		}
+		
+		if(preferences.getBoolean(Main.PREFERENCE_DATA_NOT_PUSHED, false)){
+			new User(this).pushUpdates();
+		}
 
 		// GCM
 		GCMRegistrar.checkDevice(this);
@@ -35,7 +39,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 		} else {
 			if (!preferences.contains(Main.PREFERENCE_USERID)) {
 				Log.w("GCM", "Something went wrong...");
-				GCMRegistrar.unregister(this);
+				new User(this).register(regId);
 			}
 			Log.v("GCM", "Already registered");
 		}

@@ -121,6 +121,8 @@ public class Settings extends BaseFragmentActivity {
 				}
 				editor.putString(Main.PREFERENCE_SUBJECTS, subjectSetString);
 			}
+			editor.putBoolean(Main.PREFERENCE_NOT_FIRST_START, true);
+			editor.putBoolean(Main.PREFERENCE_DATA_NOT_PUSHED, true);
 			editor.commit();
 			finish();
 		}
