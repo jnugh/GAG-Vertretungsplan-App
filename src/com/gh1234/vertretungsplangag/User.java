@@ -37,6 +37,7 @@ public class User {
 	}
 
 	public void register(String regId) {
+		preferences.edit().remove(Main.PREFERENCE_USERID).commit();
 		PowerManager pm = (PowerManager) mContext
 				.getSystemService(Context.POWER_SERVICE);
 		final PowerManager.WakeLock wl = pm.newWakeLock(
@@ -80,13 +81,23 @@ public class User {
 				});
 	}
 
-	@SuppressLint("NewApi")
 	private void setParams(RequestParams params) {
 		params.put("classes",
 				preferences.getString(Main.PREFERENCE_CLASSES, "13"));
 		params.put("notify", (preferences.getBoolean(
 				Main.PREFERENCE_NOTIFICATIONS, true)) ? "true" : "false");
 
+		Set<String> subjectSet = getSubjectSet();
+
+		JSONArray array = new JSONArray();
+		for (String string : subjectSet) {
+			array.put(string);
+		}
+		params.put("subjects", array.toString());
+	}
+
+	@SuppressLint("NewApi")
+	private Set<String> getSubjectSet() {
 		Set<String> subjectSet = null;
 		if (android.os.Build.VERSION.SDK_INT >= 11) {
 			Set<String> defaultSet = new HashSet<String>();
@@ -102,12 +113,7 @@ public class User {
 				subjectSet.add(string);
 			}
 		}
-
-		JSONArray array = new JSONArray();
-		for (String string : subjectSet) {
-			array.put(string);
-		}
-		params.put("subjects", array.toString());
+		return subjectSet;
 	}
 
 	public void pushUpdates() {
@@ -151,5 +157,44 @@ public class User {
 						}
 					}
 				});
+	}
+	
+	public String getClasses(){
+		return preferences.getString(Main.PREFERENCE_CLASSES, "13");
+	}
+	
+	public Set<String> getSubjects(){
+		return getSubjectSet();
+	}
+
+	public void unregister() {
+		PowerManager pm = (PowerManager) mContext
+				.getSystemService(Context.POWER_SERVICE);
+		final PowerManager.WakeLock wl = pm.newWakeLock(
+				PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE,
+				"register");
+		wl.acquire();
+
+		if (preferences.contains(Main.PREFERENCE_USERID)) {
+			AsyncHttpClient client = new AsyncHttpClient();
+			client.get(
+					mContext,
+					Main.SERVER + "users/"
+							+ preferences.getString(Main.PREFERENCE_USERID, "")
+							+ "/remove", new AsyncHttpResponseHandler() {
+						@Override
+						public void onFailure(Throwable arg0, String arg1) {
+							super.onFailure(arg0, arg1);
+							wl.release();
+						}
+
+						@Override
+						public void onSuccess(int arg0, String arg1) {
+							super.onSuccess(arg0, arg1);
+							wl.release();
+						}
+					});
+			preferences.edit().remove(Main.PREFERENCE_USERID).commit();
+		}
 	}
 }
